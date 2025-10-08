@@ -1,44 +1,87 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [success, setSuccess] = useState("");
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/register", { username, password });
-      navigate("/login");
+      const res = await api.post("/register", { username, password });
+      if (res.data.message) {
+        setSuccess("Registration successful! You can now log in.");
+      } else {
+        setError("Registration failed");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      console.error(err);
+      setError("Registration failed");
     }
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      <h2>Register</h2>
+      <h1>Register</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleRegister}>
+      {success && <p style={{ color: "green" }}>{success}</p>}
+      <form onSubmit={handleSubmit}>
         <input
+          type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-        /><br/>
+        /><br /><br />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-        /><br/>
+        /><br /><br />
         <button type="submit">Register</button>
       </form>
     </div>
   );
 }
+
+export default Register;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

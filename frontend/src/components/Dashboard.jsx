@@ -1,25 +1,14 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function Dashboard() {
+function Dashboard() {
   const [games, setGames] = useState([]);
-  const [name, setName] = useState("");
-  const navigate = useNavigate();
 
   const fetchGames = async () => {
     try {
       const res = await api.get("/games");
       setGames(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const createGame = async () => {
-    try {
-      const res = await api.post("/games", { name });
-      navigate(`/game/${res.data.id}`);
     } catch (err) {
       console.error(err);
     }
@@ -31,24 +20,64 @@ export default function Dashboard() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      <h2>Dashboard</h2>
-      <input
-        placeholder="New game name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <button onClick={createGame}>Create Game</button>
-      <h3>Existing Games:</h3>
-      <ul>
-        {games.map((g) => (
-          <li key={g.id}>
-            {g.name} <button onClick={() => navigate(`/game/${g.id}`)}>Join</button>
-          </li>
-        ))}
-      </ul>
+      <h1>Dashboard</h1>
+      <Link to="/game/1">
+        <button>Go to Game 1</button>
+      </Link>
+      <div>
+        <h3>Available Games:</h3>
+        {games.length === 0 ? (
+          <p>No games yet.</p>
+        ) : (
+          games.map(game => (
+            <p key={game.id}>
+              Game {game.id}: <Link to={`/game/${game.id}`}>Play</Link>
+            </p>
+          ))
+        )}
+      </div>
     </div>
   );
 }
+
+export default Dashboard;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
